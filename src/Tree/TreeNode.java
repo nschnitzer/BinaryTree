@@ -9,7 +9,7 @@ package Tree;
 public class TreeNode<T>
 {
 	T data;
-	T left, right;
+	TreeNode<T> left, right;
 	
 	//Default Constructor
 	public TreeNode()
@@ -20,7 +20,7 @@ public class TreeNode<T>
 	}
 	
 	//Constructor
-	public TreeNode(T t, T l, T r)
+	public TreeNode(T t, TreeNode<T> l, TreeNode<T> r)
 	{
 		data = t;
 		left = l;
@@ -32,22 +32,22 @@ public class TreeNode<T>
 		return data;
 	}
 	
-	public T getLeft()
+	public TreeNode<T> getLeft()
 	{
 		return left;
 	}
 	
-	public T getRight()
+	public TreeNode<T> getRight()
 	{
 		return right;
 	}
 	
-	public void setLeft(T l)
+	public void setLeft(TreeNode<T> l)
 	{
 		left = l;
 	}
 	
-	public void setRight(T r)
+	public void setRight(TreeNode<T> r)
 	{
 		right = r;
 	}
@@ -55,6 +55,25 @@ public class TreeNode<T>
 	public void setData(T t)
 	{
 		data = t;
+	}
+	
+	public boolean hasLeft()
+	{
+		return left != null;
+	}
+	
+	public boolean hasRight()
+	{
+		return right != null;
+	}
+	
+	public boolean hasChildren()
+	{
+		if (hasRight() || hasLeft())
+		{
+			return true;
+		}
+		return false;
 	}
 
 }
