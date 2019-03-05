@@ -16,7 +16,7 @@ public class BinaryTree<T>
 	public BinaryTree()
 	{
 		root = null;
-		lowestIndex = nulll
+		lowestIndex = null;
 		height = 0;
 	}
 	
