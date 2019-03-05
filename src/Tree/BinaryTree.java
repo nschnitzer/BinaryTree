@@ -10,21 +10,24 @@ package Tree;
 
 public class BinaryTree<T>
 {
-	TreeNode<T> root;
+	TreeNode<T> root, lowestIndex;
 	int height;
 	
 	public BinaryTree()
 	{
 		root = null;
+		lowestIndex = nulll
 		height = 0;
 	}
 	
 	public BinaryTree(TreeNode r)
 	{
 		root = r;
+		lowestIndex = root;
 		determineHeight();
 	}
 	
+	//Alternate Method To Consider: Only go down rightmost path since it must be filled
 	public void determineHeight()
 	{
 		height = heightHelper(root);
@@ -61,6 +64,8 @@ public class BinaryTree<T>
 				currentLoc = currentLoc.getLeft();
 			}
 			currentLoc.setLeft(new TreeNode<T>(n, null, null));
+			lowestIndex = currentLoc.getLeft();
+			determineHeight();
 			return;
 		}
 		
@@ -69,18 +74,42 @@ public class BinaryTree<T>
 		if (currentLoc.hasLeft())
 		{
 			currentLoc.setRight(new TreeNode<T>(n, null, null));
+			lowestIndex = currentLoc.getRight();
+			determineHeight();
 			return;
 		}
 		
 		//Gotta check the other nodes on the level now....
-		insert(root);
+		currentLoc = lowestIndex.getParent();
+		if (currentLoc.hasLeft() && currentLoc.hasRight())
+		{
+			if (currentLoc.equals(currentLoc.getParent().getRight()))
+			{
+				currentLoc = currentLoc.getParent().getParent().getLeft();
+				currentLoc.setLeft(new TreeNode<T>(n, null, null, currentLoc));
+				lowestIndex = currentLoc.getLeft();
+				return;
+			}
+			currentLoc = currentLoc.getParent().getRight();
+			currentLoc.setLeft(new TreeNode<T>(n, null,null, currentLoc));
+			lowestIndex = currentLoc.getLeft();
+			return;
+		}
+		currentLoc.setRight(new TreeNode<T>(n, null, null, currentLoc));
+		lowestIndex = currentLoc.getRight();
 		
 	}
 	
-	//Check for first empty slot from left to right
-	public void insert(TreeNode<T> loc)
+	
+	//Gets parent of left most element
+	public TreeNode<T> getDeepParent(TreeNode<T> index)
 	{
+		if (index.hasChildren() == true)
+		{
+			return getDeepParent(index.getLeft());
+		}
 		
+		return index.getParent();
 	}
 	
 

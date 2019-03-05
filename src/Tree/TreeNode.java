@@ -9,7 +9,7 @@ package Tree;
 public class TreeNode<T>
 {
 	T data;
-	TreeNode<T> left, right;
+	TreeNode<T> left, right, parent;
 	
 	//Default Constructor
 	public TreeNode()
@@ -17,9 +17,19 @@ public class TreeNode<T>
 		data = null;
 		left = null;
 		right = null;
+		parent = null;
 	}
 	
 	//Constructor
+	public TreeNode(T t, TreeNode<T> l, TreeNode<T> r, TreeNode<T> p)
+	{
+		data = t;
+		left = l;
+		right = r;
+		parent = p;
+	}
+	
+	//For Roots
 	public TreeNode(T t, TreeNode<T> l, TreeNode<T> r)
 	{
 		data = t;
@@ -74,6 +84,11 @@ public class TreeNode<T>
 			return true;
 		}
 		return false;
+	}
+	
+	public TreeNode<T> getParent()
+	{
+		return parent;
 	}
 
 }
