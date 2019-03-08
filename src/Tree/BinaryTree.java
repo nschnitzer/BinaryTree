@@ -7,6 +7,8 @@
 
 
 package Tree;
+import java.lang.Thread;
+import Queue.Queue;
 
 public class BinaryTree<T>
 {
@@ -20,7 +22,7 @@ public class BinaryTree<T>
 		height = 0;
 	}
 	
-	public BinaryTree(TreeNode r)
+	public BinaryTree(TreeNode<T> r)
 	{
 		root = r;
 		lowestIndex = root;
@@ -43,13 +45,25 @@ public class BinaryTree<T>
 		return Integer.max(heightHelper(node.getLeft()), heightHelper(node.getRight())) + 1;
 	}
 	
+	public int getHeight()
+	{
+		return height;
+	}
+	
 	//Check right first
 	//Fill up tree-- NOT BINARY SEARCH TREE!!!!
 	public void insert(T n)
 	{
+		if (root == null)
+		{
+			root = new TreeNode<T>(n, null, null);
+			lowestIndex = root;
+			determineHeight();
+			return;
+		}
 		TreeNode<T> currentLoc = root;
 		//Traverse to the height - 1 level at right most node
-		for (int i = 0; i < height; i++)
+		for (int i = 1; i < height; i++)
 		{
 			currentLoc = currentLoc.getRight();
 		}
@@ -80,6 +94,20 @@ public class BinaryTree<T>
 		}
 		
 		//Gotta check the other nodes on the level now....
+		//Check if the lowest index is the root
+		if (currentLoc == root)
+		{
+			System.out.println("TR");
+			if (currentLoc.hasLeft())
+			{
+				currentLoc.setRight(new TreeNode<T>(n, null, null, root));
+				lowestIndex = currentLoc.getRight();
+				return;
+			}
+			currentLoc.setLeft(new TreeNode<T>(n, null, null, root));
+			lowestIndex = currentLoc.getLeft();
+			return;
+		}
 		currentLoc = lowestIndex.getParent();
 		if (currentLoc.hasLeft() && currentLoc.hasRight())
 		{
@@ -110,6 +138,85 @@ public class BinaryTree<T>
 		}
 		
 		return index.getParent();
+	}
+	
+	public void BreadthFirstSearch()
+	{
+		TreeNode<T> node = root;
+		Queue<T> que = new Queue<T>();
+		que.push(node.getData());		
+		if (!(node.hasChildren()))
+		{
+			que.printQueue();
+			return;
+		}
+		if (node.hasRight() == false)
+		{
+			System.out.println("R");
+			Runnable runner = () ->
+			{
+				BreadthFirstSearch(node.getLeft(), que);
+			};
+			
+			Thread thread = new Thread(runner);
+			thread.start();
+		}
+		
+		Runnable runner = () ->
+		{
+			BreadthFirstSearch(node.getLeft(), que);
+			BreadthFirstSearch(node.getRight(), que);
+		};
+		
+		Thread thread = new Thread(runner);
+		thread.start();
+		que.printQueue();
+	}
+	
+	public void BreadthFirstSearch(TreeNode<T> node, Queue<T> q)
+	{
+		//System.out.println(node.getData());
+		q.push(node.getData());
+		if (!(node.hasChildren()))
+		{
+			System.out.println("q");
+			return;
+		}
+		
+		if (node.hasRight() == false)
+		{
+			System.out.println("r");
+			Runnable runner = () ->
+			{
+				BreadthFirstSearch(node.getLeft(), q);
+			};
+			
+			Thread thread = new Thread(runner);
+			thread.start();
+			notify();
+			return;
+		}
+		
+		Runnable runner = () ->
+		{
+			BreadthFirstSearch(node.getLeft(), q);
+			
+		};
+		Runnable runner2 = () ->
+		{
+			
+			BreadthFirstSearch(node.getRight(), q);
+		};
+		
+		Thread thread = new Thread(runner);
+		Thread thread2 = new Thread(runner2);
+		thread.start();
+		notify();
+		thread2.start();
+		notify();
+		return;
+		
+		
 	}
 	
 
