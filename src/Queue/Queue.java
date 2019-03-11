@@ -49,5 +49,18 @@ public class Queue<Type>
 		}
 		System.out.println(node.getValue());
 	}
+	
+	public int getLength()
+	{
+		int counter = 1;
+		Node2<Type> node = first;
+		while (node.getNextNode() != null)
+		{
+			counter++;
+			node = node.getNextNode();
+		}
+		
+		return counter;
+	}
 
 }

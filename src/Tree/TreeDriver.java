@@ -9,8 +9,11 @@ public class TreeDriver {
 		bt.insert("Hi There");
 		bt.insert("Whats up");
 		bt.insert("Hi");
+		bt.insert("Hola");
 		System.out.println(bt.getHeight());
 		bt.BreadthFirstSearch();
+		System.out.println();
+	//	bt.getGivenLength(2);
 
 	}
 

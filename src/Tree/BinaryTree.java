@@ -63,17 +63,20 @@ public class BinaryTree<T>
 		}
 		TreeNode<T> currentLoc = root;
 		//Traverse to the height - 1 level at right most node
-		for (int i = 1; i < height; i++)
+		for (int i = 1; i < height-1; i++)
 		{
 			currentLoc = currentLoc.getRight();
+			System.out.println(currentLoc.getData());
 		}
-		
+
 		//check and see if height level is full
+		
 		if (currentLoc.hasRight())
 		{
+			//System.out.println("ssss");
 			//Create new node on the left on next level
 			currentLoc = root;
-			for (int i = 0; i < height; i++)
+			for (int i = 1; i < height; i++)
 			{
 				currentLoc = currentLoc.getLeft();
 			}
@@ -97,7 +100,7 @@ public class BinaryTree<T>
 		//Check if the lowest index is the root
 		if (currentLoc == root)
 		{
-			System.out.println("TR");
+			//System.out.println("TR");
 			if (currentLoc.hasLeft())
 			{
 				currentLoc.setRight(new TreeNode<T>(n, null, null, root));
@@ -151,73 +154,81 @@ public class BinaryTree<T>
 			return;
 		}
 		if (node.hasRight() == false)
-		{
-			System.out.println("R");
-			Runnable runner = () ->
-			{
-				BreadthFirstSearch(node.getLeft(), que);
-			};
-			
-			Thread thread = new Thread(runner);
-			thread.start();
+		{		
+			BreadthFirstSearch(node.getLeft(), que);
 		}
 		
-		Runnable runner = () ->
-		{
-			BreadthFirstSearch(node.getLeft(), que);
-			BreadthFirstSearch(node.getRight(), que);
-		};
+		BreadthFirstSearch(node.getLeft(), que);
+		BreadthFirstSearch(node.getRight(), que);
 		
-		Thread thread = new Thread(runner);
-		thread.start();
+		System.out.println("OUT:");
 		que.printQueue();
+		
+		System.out.println();
+		System.out.println();
+		System.out.println(Math.ceil((Math.log10(que.getLength())/Math.log10(2))));
+		for (int i = 0; i <(int) Math.ceil((Math.log10(que.getLength())/Math.log10(2))); i++)
+		{
+			//System.out.println(Math.pow(2, i));
+			for (int k = 0; k < (int) Math.pow(2, i); k++)
+			{
+				if (que.peek() == null)
+				{
+					System.out.print("--" + "\t");
+					continue;
+				}
+				System.out.print(que.pop() + "\t");
+			}
+			System.out.println();
+		}
+			
 	}
 	
-	public void BreadthFirstSearch(TreeNode<T> node, Queue<T> q)
+	private void BreadthFirstSearch(TreeNode<T> node, Queue<T> q)
 	{
-		//System.out.println(node.getData());
 		q.push(node.getData());
 		if (!(node.hasChildren()))
 		{
-			System.out.println("q");
 			return;
 		}
 		
 		if (node.hasRight() == false)
 		{
-			System.out.println("r");
-			Runnable runner = () ->
-			{
-				BreadthFirstSearch(node.getLeft(), q);
-			};
-			
-			Thread thread = new Thread(runner);
-			thread.start();
-			notify();
+			BreadthFirstSearch(node.getLeft(), q);
 			return;
 		}
-		
-		Runnable runner = () ->
-		{
-			BreadthFirstSearch(node.getLeft(), q);
-			
-		};
-		Runnable runner2 = () ->
-		{
-			
-			BreadthFirstSearch(node.getRight(), q);
-		};
-		
-		Thread thread = new Thread(runner);
-		Thread thread2 = new Thread(runner2);
-		thread.start();
-		notify();
-		thread2.start();
-		notify();
+		BreadthFirstSearch(node.getLeft(), q);
+		BreadthFirstSearch(node.getRight(), q);
 		return;
 		
 		
 	}
 	
+	public void getGivenLength(int level)
+	{
+		Queue<T> q = new Queue<T>();
+		if (level == 1)
+		{
+			q.push(root.getData());
+		}
+		else
+		{
+			getGivenLength(root, 1, level, q);
+		}
+		q.printQueue();
+	}
+	
+	private void getGivenLength(TreeNode<T> node, int l, int target, Queue<T> q)
+	{
+		if (l == target-1)
+		{
+			q.push(node.getLeft().getData());
+			q.push(node.getRight().getData());
+			return;
+		}
+		
+		getGivenLength(node.getLeft(), l+1, target, q);
+		getGivenLength(node.getRight(), l+1, target, q);
+	}
 
 }
