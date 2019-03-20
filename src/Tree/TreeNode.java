@@ -6,10 +6,10 @@ package Tree;
 // Holds the data of a node in a BinaryTree
 //****************************************************************
 
-public class TreeNode<T>
+public class TreeNode<Type extends Comparable>
 {
-	T data;
-	TreeNode<T> left, right, parent;
+	Type data;
+	TreeNode<Type> left, right, parent;
 	
 	//Default Constructor
 	public TreeNode()
@@ -21,7 +21,7 @@ public class TreeNode<T>
 	}
 	
 	//Constructor
-	public TreeNode(T t, TreeNode<T> l, TreeNode<T> r, TreeNode<T> p)
+	public TreeNode(Type t, TreeNode<Type> l, TreeNode<Type> r, TreeNode<Type> p)
 	{
 		data = t;
 		left = l;
@@ -30,39 +30,44 @@ public class TreeNode<T>
 	}
 	
 	//For Roots
-	public TreeNode(T t, TreeNode<T> l, TreeNode<T> r)
+	public TreeNode(Type t, TreeNode<Type> l, TreeNode<Type> r)
 	{
 		data = t;
 		left = l;
 		right = r;
 	}
 	
-	public T getData()
+	public Type getData()
 	{
 		return data;
 	}
 	
-	public TreeNode<T> getLeft()
+	public TreeNode<Type> getLeft()
 	{
 		return left;
 	}
 	
-	public TreeNode<T> getRight()
+	public TreeNode<Type> getRight()
 	{
 		return right;
 	}
 	
-	public void setLeft(TreeNode<T> l)
+	public void setLeft(TreeNode<Type> l)
 	{
 		left = l;
 	}
 	
-	public void setRight(TreeNode<T> r)
+	public void setRight(TreeNode<Type> r)
 	{
 		right = r;
 	}
 	
-	public void setData(T t)
+	public void setParent(TreeNode<Type> p)
+	{
+		parent = p;
+	}
+	
+	public void setData(Type t)
 	{
 		data = t;
 	}
@@ -86,7 +91,7 @@ public class TreeNode<T>
 		return false;
 	}
 	
-	public TreeNode<T> getParent()
+	public TreeNode<Type> getParent()
 	{
 		return parent;
 	}
