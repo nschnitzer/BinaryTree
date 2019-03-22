@@ -1,4 +1,4 @@
-package Queue;
+package QueueForTrees;
 //*************************************
 // Nathan Schnitzer
 // Node.java

@@ -7,13 +7,10 @@
 
 
 package Tree;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-import Queue.Queue;
+import QueueForTrees.Queue;
 
-public class BinaryTree<T extends Comparable>
+public class BinaryTree<T extends Comparable<T>>
 {
 	TreeNode<T> root, lowestIndex;
 	int height;
@@ -53,90 +50,9 @@ public class BinaryTree<T extends Comparable>
 		return height;
 	}
 
-	//Check right first
-	//Fill up tree-- NOT BINARY SEARCH TREE!!!!
-	public void insert(T n)
-	{
-		if (root == null)
-		{
-			root = new TreeNode<T>(n, null, null);
-			lowestIndex = root;
-			determineHeight();
-			return;
-		}
-		TreeNode<T> currentLoc = root;
-		//Traverse to the height - 1 level at right most node
-		for (int i = 1; i < height-1; i++)
-		{
-			currentLoc = currentLoc.getRight();
-			System.out.println(currentLoc.getData());
-		}
-
-		//check and see if height level is full
-
-		if (currentLoc.hasRight())
-		{
-			//System.out.println("ssss");
-			//Create new node on the left on next level
-			currentLoc = root;
-			for (int i = 1; i < height; i++)
-			{
-				currentLoc = currentLoc.getLeft();
-			}
-			currentLoc.setLeft(new TreeNode<T>(n, null, null));
-			lowestIndex = currentLoc.getLeft();
-			determineHeight();
-			return;
-		}
-
-		//Shit's getting real now
-		//Check if the left child is full, if it is then you can just fill it up and not have to do anything fancy
-		if (currentLoc.hasLeft())
-		{
-			currentLoc.setRight(new TreeNode<T>(n, null, null));
-			lowestIndex = currentLoc.getRight();
-			determineHeight();
-			return;
-		}
-
-		//Gotta check the other nodes on the level now....
-		//Check if the lowest index is the root
-		if (currentLoc == root)
-		{
-			//System.out.println("TR");
-			if (currentLoc.hasLeft())
-			{
-				currentLoc.setRight(new TreeNode<T>(n, null, null, root));
-				lowestIndex = currentLoc.getRight();
-				return;
-			}
-			currentLoc.setLeft(new TreeNode<T>(n, null, null, root));
-			lowestIndex = currentLoc.getLeft();
-			return;
-		}
-
-		if (currentLoc.hasLeft() && currentLoc.hasRight())
-		{
-			if (currentLoc.equals(currentLoc.getParent().getRight()))
-			{
-				currentLoc = currentLoc.getParent().getParent().getLeft();
-				currentLoc.setLeft(new TreeNode<T>(n, null, null, currentLoc));
-				lowestIndex = currentLoc.getLeft();
-				return;
-			}
-			currentLoc = currentLoc.getParent().getRight();
-			currentLoc.setLeft(new TreeNode<T>(n, null,null, currentLoc));
-			lowestIndex = currentLoc.getLeft();
-			return;
-		}
-
-		currentLoc.setRight(new TreeNode<T>(n, null, null, currentLoc));
-		lowestIndex = currentLoc.getRight();
-
-	}
-
-	//REDESIGN
-	public void insert2(T t)
+	//REDESIGN without recursion
+	//Inserts element into the tree
+	public void insert(T t)
 	{
 		if (root == null)
 		{
@@ -146,87 +62,36 @@ public class BinaryTree<T extends Comparable>
 			return;
 		}
 
+		Queue<TreeNode<T>> que = new Queue<TreeNode<T>>();
+		que.push(root);
 
-		TreeNode<T> index = root;
-		while (index.hasRight())
+		while (que.isEmpty() == false)
 		{
-			index = index.getRight();
-			
-		}
-		if (index.equals(root) == false)
-			index = index.getParent();
-		//System.out.println("INCOMING ALERT: " + index.getData());
-		if (index.hasLeft() && index.hasRight() == false)
-		{
-			index.setRight(new TreeNode<T>(t, null, null, index));
-			return;
-		}
-		
-		if (index.hasChildren() == false)
-		{
-			index.setLeft(new TreeNode<T>(t, null,null, index));
-			return;
-		}
-		System.out.println("index " + index.getData());
-		if (index.hasLeft() && index.hasRight())
-		{
-			if (index.equals(root))
+			TreeNode<T> node = que.pop();
+
+			if (node.hasLeft() == false)
 			{
-			System.out.println("INDEX " + index.getData());
-			insert2(index.getLeft(), t);
-			return;
+				node.setLeft(new TreeNode<T>(t, null, null, node));
+				break;
 			}
 			else
 			{
-				if (getDeepParent(root).hasLeft() && getDeepParent(root).hasRight())
-				{
-				getDeepParent(root).getLeft().setLeft(new TreeNode<T>(t, null, null, getDeepParent(root).getLeft()));
-				determineHeight();
-				return;
-				}
-				index = getDeepParent(root);
-				System.out.println("INCOMING ALERTSSS: " + index.getData());
-				insert2(index, t);
+				que.push(node.getLeft());
 			}
-			/*
-			System.out.println(index.getData() + " DFDFD");
-			index = getDeepParent(root).getLeft();
-			System.out.println("INCOMING: " + index.getData());
-			
-			index.setLeft(new TreeNode<T>(t, null, null, index));
-			determineHeight();
-			return;
-			*/
+			if (node.hasRight() == false)
+			{
+				node.setRight(new TreeNode<T>(t, null, null, node));
+				break;
+			}
+			else
+			{
+				que.push(node.getRight());
+			}
 		}
+		determineHeight();
 
 	}
 
-	private void insert2(TreeNode<T> index, T t)
-	{
-		if (index.hasLeft() && index.hasRight() == false)
-		{
-			index.setRight(new TreeNode<T>(t, null, null, index));
-			return;
-		}
-		if (index.hasLeft() == false)
-		{
-			index.setLeft(new TreeNode<T>(t, null, null, index));
-			return;
-		}
-		
-		//Check if this is the right node of the parent
-		if (index.equals(index.getParent().getRight()))
-		{
-			insert2(index.getParent().getParent(), t);
-			return;
-		}
-		else
-		{
-			insert2(index.getParent().getRight(), t);
-			return;
-		}
-		
-	}
 
 	//Gets parent of left most element
 	public TreeNode<T> getDeepParent(TreeNode<T> index)
@@ -239,41 +104,69 @@ public class BinaryTree<T extends Comparable>
 		return index.getParent();
 	}
 
-	public void BreadthFirstSearch()
+	public void printBreadthFirst()
 	{
-		TreeNode<T> node = root;
+		int level = 1;
+		if (level == 1)
+		{
+			System.out.println(root.getData());
+		}
+		else
+		{
+			printBreadthFirst(root, 1, level);
+		}
+		
+		//NEED TO FINISH
+	}
+	
+	private void printBreadthFirst(TreeNode<T> node, int l, int target)
+	{
+		if (l == target-1)
+		{
+			if (node.hasLeft())
+				System.out.println(node.getLeft().getData());
+			System.out.println(node.getRight().getData());
+			return;
+		}
+
+		printBreadthFirst(node.getLeft(), l+1, target);
+		printBreadthFirst(node.getRight(), l+1, target);
+	}
+	
+	//Breadth First Traversak w/o Queue
+	public void printBreadthFirstQueue()
+	{
+		Queue<T> q = new Queue<T>();
+		
+		for (int i = 1; i <= getHeight(); i++)
+		{
+			Queue<T> que = getGivenLengthQueue(i);
+			while (que.isEmpty() == false)
+			{
+				q.push(que.pop());
+			}
+		}
+		
+		q.printQueueOneLine();
+		
+	}
+
+	public Queue<T> getGivenLengthQueue(int level)
+	{
 		Queue<T> que = new Queue<T>();
-		que.push(node.getData());
-		if (node.hasLeft())
+		if (level == 1)
 		{
-			BreadthFirstSearch(node.getLeft(), que);
+			que.push(root.getData());
 		}
-		if (node.hasRight())
+		else
 		{
-			BreadthFirstSearch(node.getRight(), que);
+			getGivenLength(root, 1, level, que);
 		}
-
-		System.out.println("OUT:");
-		que.printQueue();
-
+		
+		return que;
 	}
-
-	private void BreadthFirstSearch(TreeNode<T> node, Queue<T> q)
-	{
-		q.push(node.getData());
-		if (node.hasLeft())
-		{
-			BreadthFirstSearch(node.getLeft(), q);
-		}
-		if (node.hasRight())
-		{
-			BreadthFirstSearch(node.getRight(), q);
-		}
-
-		return;
-
-	}
-
+	
+	
 	public void getGivenLength(int level)
 	{
 		Queue<T> q = new Queue<T>();
@@ -285,14 +178,15 @@ public class BinaryTree<T extends Comparable>
 		{
 			getGivenLength(root, 1, level, q);
 		}
-		q.printQueue();
+		q.printQueueOneLine();
 	}
 
 	private void getGivenLength(TreeNode<T> node, int l, int target, Queue<T> q)
 	{
 		if (l == target-1)
 		{
-			q.push(node.getLeft().getData());
+			if (node.hasLeft())
+				q.push(node.getLeft().getData());
 			q.push(node.getRight().getData());
 			return;
 		}
@@ -369,6 +263,44 @@ public class BinaryTree<T extends Comparable>
 		}
 
 		que.push(node.getData());
+	}
+	
+	//Print InOrder
+	public void printInOrder()
+	{
+		TreeNode<T> node = root;
+		Queue<T> que = new Queue<T>();
+		
+		if (node.hasLeft())
+		{
+			printInOrder(node.getLeft(), que);
+		}
+		
+		que.push(node.getData());
+		
+		if (node.hasRight())
+		{
+			printInOrder(node.getRight(), que);
+		}
+		
+		que.printQueueOneLine();
+	}
+	
+	private void printInOrder(TreeNode<T> node, Queue<T> que)
+	{
+		if (node.hasLeft())
+		{
+			printInOrder(node.getLeft(), que);
+		}
+		
+		que.push(node.getData());
+		
+		if (node.hasRight())
+		{
+			printInOrder(node.getRight(), que);
+		}
+		
+		return;
 	}
 
 }

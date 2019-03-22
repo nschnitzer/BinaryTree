@@ -1,4 +1,4 @@
-package Queue;
+package QueueForTrees;
 
 public class Queue<Type> 
 {
@@ -50,6 +50,18 @@ public class Queue<Type>
 		System.out.println(node.getValue());
 	}
 	
+	//Prints the Queue in one line
+	public void printQueueOneLine()
+	{
+		Node2<Type> node = first;
+		while (node.getNextNode() != null)
+		{
+			System.out.print(node.getValue() + " ");
+			node = node.getNextNode();
+		}
+		System.out.println(node.getValue());
+	}
+	
 	public int getLength()
 	{
 		int counter = 1;
@@ -61,6 +73,15 @@ public class Queue<Type>
 		}
 		
 		return counter;
+	}
+	
+	public boolean isEmpty()
+	{
+		if (size == 0)
+		{
+			return true;
+		}
+		return false;
 	}
 
 }
