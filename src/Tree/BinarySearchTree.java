@@ -7,10 +7,6 @@
 
 package Tree;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import QueueForTrees.Queue;
 
 
@@ -79,6 +75,7 @@ public class BinarySearchTree<Type extends Comparable>
 			}
 
 			node.setLeft(new TreeNode<Type>(c, null, null, node));
+			determineHeight();
 			return;
 		}
 
@@ -90,34 +87,147 @@ public class BinarySearchTree<Type extends Comparable>
 		}
 
 		node.setRight(new TreeNode<Type>(c, null, null, node));
+		determineHeight();
 		return;
 	}
+
 
 	public void delete(Type c)
 	{
 		if (root.getData().equals(c))
 		{
-			TreeNode<Type> n = getDeepElement(root);
-			if (n.hasRight() == false)
+			//If it doesnt have any children
+			if (root.hasChildren() == false)
 			{
-				n.getParent().setLeft(null);
-				root.getLeft().setParent(n);
-				root.getRight().setParent(n);
-				root = n;
+				root = null;
 				return;
 			}
 			else //Shit gets much more complicated
 			{
-				Queue<Type> children = getAllChildren(root.getRight());
-				
-			}
+				TreeNode<Type> successor = findSuccessor(root);
+				TreeNode<Type> temp = successor.getParent();
+				Queue<Type> que = new Queue<Type>();
+				que = getAllChildren(root); //Will insert back in later
+				successor.setLeft(null);
+				successor.setRight(null); //Detach successor's children from the tree - now unaccessable
+				//Detach successor
+				if (root.getParent().hasRight() && root.getParent().getRight() == root)
+				{
+					root.getParent().setRight(successor); //Detached node
+				}
+				else
+				{
+					root.getParent().setLeft(successor);
+				}
 
+				while (que.isEmpty() == false)
+				{
+					insert(successor, que.pop());
+				}
+			}
+			determineHeight();
+
+		}
+		else
+		{
+			delete(findNode(root, c), c);
 		}
 	}
 
 	private void delete(TreeNode<Type> node, Type c)
 	{
+		System.out.println("ENTERRR");
+		//If it doesnt have any children
+		if (node.hasChildren() == false)
+		{
+			node = null;
+			return;
+		}
+		else //Shit gets much more complicated
+		{
+			TreeNode<Type> successor = findSuccessor(root);
+			TreeNode<Type> temp = successor.getParent();
+			Queue<Type> que = new Queue<Type>();
+			que = getAllChildren(node); //Will insert back in later
+			successor.setLeft(null);
+			successor.setRight(null); //Detach successor's children from the tree - now unaccessable
+			//Detach successor
+			if (node.getParent().hasRight() && node.getParent().getRight() == node)
+			{
+				node.getParent().setRight(successor); //Detached node
+			}
+			else
+			{
+				node.getParent().setLeft(successor);
+			}
 
+			if (node.hasLeft() && node.getLeft() != successor)
+			{
+				node.getLeft().setParent(successor);
+			}
+			else if (node.hasRight() && node.getRight() != successor)
+			{
+				node.getRight().setParent(successor);
+
+			}
+
+			while (que.isEmpty() == false)
+			{
+				insert(successor, que.pop());
+			}
+		}
+		determineHeight();
+	}
+
+	//Finds the left most value of the right child
+	private TreeNode<Type> findSuccessor(TreeNode<Type> node)
+	{
+		node = node.getRight();
+
+		if (node.hasLeft() == false)
+		{
+			return node;
+		}
+
+		return getDeepElement(node);
+	}
+
+	//Finds the node where the value is
+	private TreeNode<Type> findNode(TreeNode<Type> node, Type c) throws AssertionError
+	{
+		if (node.getData().equals(c))
+		{
+			return node;
+		}
+
+		if (node.hasChildren() == false)
+		{
+			System.out.println(c + " not found");
+			throw new AssertionError(c + " does not exust");
+		}
+		else
+		{
+			if (node.getData().compareTo(c) > 0)
+			{
+				//Going left
+				if (node.hasLeft() == false)
+				{
+					System.out.println(c + " not found");
+					throw new AssertionError(c + " does not exust");
+				}
+				return findNode(node.getLeft(), c);
+			}
+			else
+			{
+				//Going right
+				if (node.hasRight() == false)
+				{
+					System.out.println(c + " not found");
+					throw new AssertionError(c + " does not exust");
+				}
+				return findNode(node.getRight(), c);
+			}
+		}
 	}
 
 	//Gets left most element
@@ -133,7 +243,7 @@ public class BinarySearchTree<Type extends Comparable>
 
 	private Queue<Type> getAllChildren(TreeNode<Type> node)
 	{
-		
+
 		Queue<Type> que = new Queue<Type>();
 		que.push(node.getData());
 		if (node.hasLeft())
@@ -165,5 +275,37 @@ public class BinarySearchTree<Type extends Comparable>
 	}
 
 
+	private void determineHeight()
+	{
+		if (root == null)
+		{
+			height = 0;
+			return;
+		}
+		height = determineHeight(root);
+	}
+
+	private int determineHeight(TreeNode<Type> node)
+	{
+
+		int lDeep = 0, rDeep = 0;
+		if (node.hasLeft())
+			lDeep = determineHeight(node.getLeft());
+		if (node.hasRight())
+			rDeep = determineHeight(node.getRight());
+
+		if (lDeep > rDeep)
+		{
+			return lDeep + 1;
+		}
+		return rDeep + 1;
+
+	}
+
+	public int getHeight()
+	{
+		determineHeight();
+		return height;
+	}
 
 }

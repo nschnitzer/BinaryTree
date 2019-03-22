@@ -7,7 +7,7 @@
 
 package Tree;
 
-public class BinaryTreeDriver {
+public class BSTDriver {
 
 	public static void main(String[] args) {
 		BinarySearchTree<Integer> st = new BinarySearchTree<Integer>();
@@ -21,6 +21,8 @@ public class BinaryTreeDriver {
 		st.insert(95);
 		st.insert(120);
 		st.insert(99);
+		BTreePrinter.printNode(st.root);
+		st.delete(100);
 		BTreePrinter.printNode(st.root);
 
 	}
