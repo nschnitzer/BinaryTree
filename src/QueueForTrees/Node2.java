@@ -3,7 +3,7 @@ package QueueForTrees;
 // Nathan Schnitzer
 // Node.java
 //
-//
+// PLEASE NOTE: THIS IS ONLY TO BE USED FOR TREES!! THIS IS NOT THE NODE CLASS TO BE GRADED
 //*************************************
 
 public class Node2<Type> 

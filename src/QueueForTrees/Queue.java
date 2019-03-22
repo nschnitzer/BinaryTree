@@ -1,3 +1,10 @@
+//**************************************************************************
+// Nathan Schnitzer
+// Queue.java
+// A long time ago
+// PLEASE NOTE: THIS QUEUE CLASS IS CUSTOMIZED FOR TREES!!! THIS IS NOT THE QUEUE CLASS TO BE GRADED (seperate project files)
+//**************************************************************************
+
 package QueueForTrees;
 
 public class Queue<Type> 

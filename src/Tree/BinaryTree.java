@@ -104,19 +104,28 @@ public class BinaryTree<T extends Comparable<T>>
 		return index.getParent();
 	}
 
+	//Breadth First Traversal w/o Queue
 	public void printBreadthFirst()
 	{
-		int level = 1;
-		if (level == 1)
+		int i = 1;
+		while (i <= getHeight())
 		{
-			System.out.println(root.getData());
+			printBreadthFirst(i);
+			i++;
+		}
+		System.out.println();
+	}
+	
+	private void printBreadthFirst(int i)
+	{
+		if (i == 1)
+		{
+			System.out.print(root.getData() + " ");
 		}
 		else
 		{
-			printBreadthFirst(root, 1, level);
+			printBreadthFirst(root, 1, i);
 		}
-		
-		//NEED TO FINISH
 	}
 	
 	private void printBreadthFirst(TreeNode<T> node, int l, int target)
@@ -124,8 +133,9 @@ public class BinaryTree<T extends Comparable<T>>
 		if (l == target-1)
 		{
 			if (node.hasLeft())
-				System.out.println(node.getLeft().getData());
-			System.out.println(node.getRight().getData());
+				System.out.print(node.getLeft().getData() + " ");
+			if (node.hasRight())
+				System.out.print(node.getRight().getData() + " ");
 			return;
 		}
 
@@ -133,7 +143,7 @@ public class BinaryTree<T extends Comparable<T>>
 		printBreadthFirst(node.getRight(), l+1, target);
 	}
 	
-	//Breadth First Traversak w/o Queue
+	//Breadth First Traversal w/ Queue
 	public void printBreadthFirstQueue()
 	{
 		Queue<T> q = new Queue<T>();
@@ -187,7 +197,8 @@ public class BinaryTree<T extends Comparable<T>>
 		{
 			if (node.hasLeft())
 				q.push(node.getLeft().getData());
-			q.push(node.getRight().getData());
+			if (node.hasRight())
+				q.push(node.getRight().getData());
 			return;
 		}
 
@@ -212,7 +223,7 @@ public class BinaryTree<T extends Comparable<T>>
 			printPreOrder(node.getRight(), que);
 		}
 
-		que.printQueue();
+		que.printQueueOneLine();
 
 	}
 
@@ -247,7 +258,7 @@ public class BinaryTree<T extends Comparable<T>>
 
 		que.push(node.getData());
 
-		que.printQueue();
+		que.printQueueOneLine();
 	}
 
 	private void printPostOrder(TreeNode<T> node, Queue<T> que)
