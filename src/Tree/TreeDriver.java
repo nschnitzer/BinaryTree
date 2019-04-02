@@ -17,7 +17,7 @@ public class TreeDriver {
 		bt.insert(9);
 		
 		
-		BTreePrinter.printNode(bt.root);
+		//BTreePrinter.printNode(bt.root);
 		
 		
 		System.out.println();

@@ -61,6 +61,8 @@ public class Queue<Type>
 	public void printQueueOneLine()
 	{
 		Node2<Type> node = first;
+		if (node == null)
+			return;
 		while (node.getNextNode() != null)
 		{
 			System.out.print(node.getValue() + " ");

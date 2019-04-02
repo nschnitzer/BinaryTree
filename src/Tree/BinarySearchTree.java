@@ -7,6 +7,8 @@
 
 package Tree;
 
+import java.util.LinkedList;
+
 import QueueForTrees.Queue;
 
 
@@ -75,7 +77,7 @@ public class BinarySearchTree<Type extends Comparable>
 			}
 
 			node.setLeft(new TreeNode<Type>(c, null, null, node));
-			determineHeight();
+			//determineHeight();
 			return;
 		}
 
@@ -87,7 +89,7 @@ public class BinarySearchTree<Type extends Comparable>
 		}
 
 		node.setRight(new TreeNode<Type>(c, null, null, node));
-		determineHeight();
+		//determineHeight();
 		return;
 	}
 
@@ -125,7 +127,7 @@ public class BinarySearchTree<Type extends Comparable>
 					insert(successor, que.pop());
 				}
 			}
-			determineHeight();
+			//determineHeight();
 
 		}
 		else
@@ -136,6 +138,7 @@ public class BinarySearchTree<Type extends Comparable>
 
 	private void delete(TreeNode<Type> node, Type c)
 	{
+		System.out.println("Removing: " + c);
 		System.out.println("ENTERRR");
 		//If it doesnt have any children
 		if (node.hasChildren() == false)
@@ -145,20 +148,22 @@ public class BinarySearchTree<Type extends Comparable>
 		}
 		else //Shit gets much more complicated
 		{
-			TreeNode<Type> successor = findSuccessor(root);
+			TreeNode<Type> successor = findSuccessor(node);
 			TreeNode<Type> temp = successor.getParent();
 			Queue<Type> que = new Queue<Type>();
-			que = getAllChildren(node); //Will insert back in later
+			que = getAllChildren(successor); //Will insert back in later
 			successor.setLeft(null);
 			successor.setRight(null); //Detach successor's children from the tree - now unaccessable
 			//Detach successor
-			if (node.getParent().hasRight() && node.getParent().getRight() == node)
+			if (node.getParent().hasRight() && node.getParent().getRight() == node) //if its the right node of the parent
 			{
 				node.getParent().setRight(successor); //Detached node
+				successor.setParent(node.getParent());
 			}
 			else
 			{
 				node.getParent().setLeft(successor);
+				successor.setParent(node.getParent());
 			}
 
 			if (node.hasLeft() && node.getLeft() != successor)
@@ -170,17 +175,20 @@ public class BinarySearchTree<Type extends Comparable>
 				node.getRight().setParent(successor);
 
 			}
+			
+			node = null;
+			que.printQueueOneLine();
 
 			while (que.isEmpty() == false)
 			{
 				insert(successor, que.pop());
 			}
 		}
-		determineHeight();
+		//determineHeight();
 	}
 
 	//Finds the left most value of the right child
-	private TreeNode<Type> findSuccessor(TreeNode<Type> node)
+	public TreeNode<Type> findSuccessor(TreeNode<Type> node)
 	{
 		node = node.getRight();
 
@@ -233,7 +241,7 @@ public class BinarySearchTree<Type extends Comparable>
 	//Gets left most element
 	private TreeNode<Type> getDeepElement(TreeNode<Type> index)
 	{
-		if (index.hasChildren() == true)
+		if (index.hasLeft() == true)
 		{
 			return getDeepElement(index.getLeft());
 		}
@@ -245,7 +253,7 @@ public class BinarySearchTree<Type extends Comparable>
 	{
 
 		Queue<Type> que = new Queue<Type>();
-		que.push(node.getData());
+		//que.push(node.getData());
 		if (node.hasLeft())
 		{
 			getAllChildren(node.getLeft(), que);
@@ -275,30 +283,20 @@ public class BinarySearchTree<Type extends Comparable>
 	}
 
 
-	private void determineHeight()
+	public int determineHeight()
 	{
-		if (root == null)
-		{
-			height = 0;
-			return;
-		}
-		height = determineHeight(root);
+		return determineHeight(root);
 	}
 
 	private int determineHeight(TreeNode<Type> node)
 	{
-
-		int lDeep = 0, rDeep = 0;
-		if (node.hasLeft())
-			lDeep = determineHeight(node.getLeft());
-		if (node.hasRight())
-			rDeep = determineHeight(node.getRight());
-
-		if (lDeep > rDeep)
+		
+		if (node == null)
 		{
-			return lDeep + 1;
+			return 0;
 		}
-		return rDeep + 1;
+		
+		return Integer.max(determineHeight(node.getLeft()), determineHeight(node.getRight())) + 1;
 
 	}
 
@@ -307,5 +305,27 @@ public class BinarySearchTree<Type extends Comparable>
 		determineHeight();
 		return height;
 	}
+	
+	public void printOut()
+	{
+		for (int i = 1; i <= getHeight(); i++)
+		{
+			printOutLevel(root, i);
+		}
+	}
+	
+	public void printOutLevel(TreeNode<Type> node, int level)
+	{ 
+		        if (node == null) 
+		            return; 
+		        if (level == 1) 
+		            System.out.print(node.data + " "); 
+		        else if (level > 1) 
+		        { 
+		            printOutLevel(node.getLeft(), level-1); 
+		            printOutLevel(node.getRight(), level-1); 
+		        } 
+	}
+	
 
 }

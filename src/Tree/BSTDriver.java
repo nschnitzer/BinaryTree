@@ -21,8 +21,13 @@ public class BSTDriver {
 		st.insert(95);
 		st.insert(120);
 		st.insert(99);
+		System.out.println(st.determineHeight());
 		BTreePrinter.printNode(st.root);
+		//st.printOut();
+		System.out.println(st.findSuccessor(st.root.getRight()).getData());
 		st.delete(100);
+		
+		System.out.println(st.findSuccessor(st.root.getRight().getRight()).getData());
 		BTreePrinter.printNode(st.root);
 
 	}

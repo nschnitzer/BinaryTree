@@ -12,7 +12,7 @@ import QueueForTrees.Queue;
 
 public class BinaryTree<T extends Comparable<T>>
 {
-	TreeNode<T> root, lowestIndex;
+	BTreeNode<T> root, lowestIndex;
 	int height;
 
 	public BinaryTree()
@@ -22,7 +22,7 @@ public class BinaryTree<T extends Comparable<T>>
 		height = 0;
 	}
 
-	public BinaryTree(TreeNode<T> r)
+	public BinaryTree(BTreeNode<T> r)
 	{
 		root = r;
 		lowestIndex = root;
@@ -35,7 +35,7 @@ public class BinaryTree<T extends Comparable<T>>
 		height = heightHelper(root);
 	}
 
-	public int heightHelper(TreeNode<T> node)
+	public int heightHelper(BTreeNode<T> node)
 	{
 		if (node == null)
 		{
@@ -56,22 +56,22 @@ public class BinaryTree<T extends Comparable<T>>
 	{
 		if (root == null)
 		{
-			root = new TreeNode<T>(t, null, null);
+			root = new BTreeNode<T>(t, null, null);
 			lowestIndex = root;
 			determineHeight();
 			return;
 		}
 
-		Queue<TreeNode<T>> que = new Queue<TreeNode<T>>();
+		Queue<BTreeNode<T>> que = new Queue<BTreeNode<T>>();
 		que.push(root);
 
 		while (que.isEmpty() == false)
 		{
-			TreeNode<T> node = que.pop();
+			BTreeNode<T> node = que.pop();
 
 			if (node.hasLeft() == false)
 			{
-				node.setLeft(new TreeNode<T>(t, null, null, node));
+				node.setLeft(new BTreeNode<T>(t, null, null, node));
 				break;
 			}
 			else
@@ -80,7 +80,7 @@ public class BinaryTree<T extends Comparable<T>>
 			}
 			if (node.hasRight() == false)
 			{
-				node.setRight(new TreeNode<T>(t, null, null, node));
+				node.setRight(new BTreeNode<T>(t, null, null, node));
 				break;
 			}
 			else
@@ -94,7 +94,7 @@ public class BinaryTree<T extends Comparable<T>>
 
 
 	//Gets parent of left most element
-	public TreeNode<T> getDeepParent(TreeNode<T> index)
+	public BTreeNode<T> getDeepParent(BTreeNode<T> index)
 	{
 		if (index.hasChildren() == true)
 		{
@@ -128,7 +128,7 @@ public class BinaryTree<T extends Comparable<T>>
 		}
 	}
 	
-	private void printBreadthFirst(TreeNode<T> node, int l, int target)
+	private void printBreadthFirst(BTreeNode<T> node, int l, int target)
 	{
 		if (l == target-1)
 		{
@@ -191,7 +191,7 @@ public class BinaryTree<T extends Comparable<T>>
 		q.printQueueOneLine();
 	}
 
-	private void getGivenLength(TreeNode<T> node, int l, int target, Queue<T> q)
+	private void getGivenLength(BTreeNode<T> node, int l, int target, Queue<T> q)
 	{
 		if (l == target-1)
 		{
@@ -208,7 +208,7 @@ public class BinaryTree<T extends Comparable<T>>
 
 	public void printPreOrder()
 	{
-		TreeNode<T> node = root;
+		BTreeNode<T> node = root;
 		Queue<T> que = new Queue<T>();
 
 		que.push(node.getData());
@@ -227,7 +227,7 @@ public class BinaryTree<T extends Comparable<T>>
 
 	}
 
-	private void printPreOrder(TreeNode<T> node, Queue<T> que)
+	private void printPreOrder(BTreeNode<T> node, Queue<T> que)
 	{
 		que.push(node.getData());
 		if (node.hasLeft())
@@ -243,7 +243,7 @@ public class BinaryTree<T extends Comparable<T>>
 
 	public void printPostOrder()
 	{
-		TreeNode<T> node = root;
+		BTreeNode<T> node = root;
 		Queue<T> que = new Queue<T>();
 
 		if (node.hasLeft())
@@ -261,7 +261,7 @@ public class BinaryTree<T extends Comparable<T>>
 		que.printQueueOneLine();
 	}
 
-	private void printPostOrder(TreeNode<T> node, Queue<T> que)
+	private void printPostOrder(BTreeNode<T> node, Queue<T> que)
 	{
 		if (node.hasLeft())
 		{
@@ -279,7 +279,7 @@ public class BinaryTree<T extends Comparable<T>>
 	//Print InOrder
 	public void printInOrder()
 	{
-		TreeNode<T> node = root;
+		BTreeNode<T> node = root;
 		Queue<T> que = new Queue<T>();
 		
 		if (node.hasLeft())
@@ -297,7 +297,7 @@ public class BinaryTree<T extends Comparable<T>>
 		que.printQueueOneLine();
 	}
 	
-	private void printInOrder(TreeNode<T> node, Queue<T> que)
+	private void printInOrder(BTreeNode<T> node, Queue<T> que)
 	{
 		if (node.hasLeft())
 		{
@@ -309,6 +309,57 @@ public class BinaryTree<T extends Comparable<T>>
 		if (node.hasRight())
 		{
 			printInOrder(node.getRight(), que);
+		}
+		
+		return;
+	}
+	
+	public BinarySearchTree<T> toBST()
+	{
+		Queue<T> elements = inOrder();
+		
+		BinarySearchTree<T> bst = new BinarySearchTree<T>();
+		while (elements.isEmpty() == false)
+		{
+			bst.insert(elements.pop());
+		}
+		
+		return bst;
+		
+	}
+	
+	public Queue<T> inOrder()
+	{
+		BTreeNode<T> node = root;
+		Queue<T> que = new Queue<T>();
+		
+		if (node.hasLeft())
+		{
+			inOrder(node.getLeft(), que);
+		}
+		
+		que.push(node.getData());
+		
+		if (node.hasRight())
+		{
+			inOrder(node.getRight(), que);
+		}
+		
+		return que;
+	}
+	
+	private void inOrder(BTreeNode<T> node, Queue<T> que)
+	{
+		if (node.hasLeft())
+		{
+			inOrder(node.getLeft(), que);
+		}
+		
+		que.push(node.getData());
+		
+		if (node.hasRight())
+		{
+			inOrder(node.getRight(), que);
 		}
 		
 		return;
