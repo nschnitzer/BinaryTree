@@ -11,7 +11,7 @@ public class BSTDriver {
 
 	public static void main(String[] args) {
 		BinarySearchTree<Integer> st = new BinarySearchTree<Integer>();
-		
+
 		st.insert(50);
 		st.insert(24);
 		st.insert(75);
@@ -23,12 +23,15 @@ public class BSTDriver {
 		st.insert(99);
 		System.out.println(st.determineHeight());
 		BTreePrinter.printNode(st.root);
-		//st.printOut();
+		// st.printOut();
 		System.out.println(st.findSuccessor(st.root.getRight()).getData());
 		st.delete(100);
-		
-		System.out.println(st.findSuccessor(st.root.getRight().getRight()).getData());
 		BTreePrinter.printNode(st.root);
+		/*
+		 * st.delete(50); BTreePrinter.printNode(st.root); st.delete(24);
+		 * BTreePrinter.printNode(st.root); st.delete(95);
+		 * BTreePrinter.printNode(st.root);
+		 */
 
 	}
 
