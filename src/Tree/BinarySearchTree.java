@@ -10,8 +10,6 @@ package Tree;
 import java.util.Collections;
 import java.util.LinkedList;
 
-import QueueForTrees.Queue;
-
 public class BinarySearchTree<Type extends Comparable> {
 	TreeNode<Type> root;
 	int height;
@@ -353,5 +351,217 @@ public class BinarySearchTree<Type extends Comparable> {
 		
 		return bst;
 	}
+	
+	//Breadth First Traversal w/o Queue
+	public void printBreadthFirst()
+	{
+		int i = 1;
+		while (i <= getHeight())
+		{
+			printBreadthFirst(i);
+			i++;
+		}
+		System.out.println();
+	}
+	
+	private void printBreadthFirst(int i)
+	{
+		if (i == 1)
+		{
+			System.out.print(root.getData() + " ");
+		}
+		else
+		{
+			printBreadthFirst(root, 1, i);
+		}
+	}
+	
+	private void printBreadthFirst(TreeNode<Type> node, int l, int target)
+	{
+		if (l == target-1)
+		{
+			if (node.hasLeft())
+				System.out.print(node.getLeft().getData() + " ");
+			if (node.hasRight())
+				System.out.print(node.getRight().getData() + " ");
+			return;
+		}
+
+		printBreadthFirst(node.getLeft(), l+1, target);
+		printBreadthFirst(node.getRight(), l+1, target);
+	}
+	
+	//Breadth First Traversal w/ Queue
+	public void printBreadthFirstQueue()
+	{
+		Queue<Type> q = new Queue<Type>();
+		
+		for (int i = 1; i <= getHeight(); i++)
+		{
+			Queue<Type> que = getGivenLengthQueue(i);
+			while (que.isEmpty() == false)
+			{
+				q.push(que.pop());
+			}
+		}
+		
+		q.printQueueOneLine();
+		
+	}
+	
+
+	public Queue<Type> getGivenLengthQueue(int level)
+	{
+		Queue<Type> que = new Queue<Type>();
+		if (level == 1)
+		{
+			que.push(root.getData());
+		}
+		else
+		{
+			getGivenLength(root, 1, level, que);
+		}
+		
+		return que;
+	}
+	
+	
+	public void getGivenLength(int level)
+	{
+		Queue<Type> q = new Queue<Type>();
+		if (level == 1)
+		{
+			q.push(root.getData());
+		}
+		else
+		{
+			getGivenLength(root, 1, level, q);
+		}
+		q.printQueueOneLine();
+	}
+
+	private void getGivenLength(TreeNode<Type> node, int l, int target, Queue<Type> q)
+	{
+		if (l == target-1)
+		{
+			if (node.hasLeft())
+				q.push(node.getLeft().getData());
+			if (node.hasRight())
+				q.push(node.getRight().getData());
+			return;
+		}
+
+		getGivenLength(node.getLeft(), l+1, target, q);
+		getGivenLength(node.getRight(), l+1, target, q);
+	}
+
+	public void printPreOrder()
+	{
+		TreeNode<Type> node = root;
+		Queue<Type> que = new Queue<Type>();
+
+		que.push(node.getData());
+
+		if (node.hasLeft())
+		{
+			printPreOrder(node.getLeft(), que);
+		}
+
+		if (node.hasRight())
+		{
+			printPreOrder(node.getRight(), que);
+		}
+
+		que.printQueueOneLine();
+
+	}
+
+	private void printPreOrder(TreeNode<Type> node, Queue<Type> que)
+	{
+		que.push(node.getData());
+		if (node.hasLeft())
+		{
+			printPreOrder(node.getLeft(), que);
+		}
+		if (node.hasRight())
+		{
+			printPreOrder(node.getRight(), que);
+		}
+		return;
+	}
+
+	public void printPostOrder()
+	{
+		TreeNode<Type> node = root;
+		Queue<Type> que = new Queue<Type>();
+
+		if (node.hasLeft())
+		{
+			printPostOrder(node.getLeft(), que);
+		}
+
+		if (node.hasRight())
+		{
+			printPostOrder(node.getRight(), que);
+		}
+
+		que.push(node.getData());
+
+		que.printQueueOneLine();
+	}
+
+	private void printPostOrder(TreeNode<Type> node, Queue<Type> que)
+	{
+		if (node.hasLeft())
+		{
+			printPostOrder(node.getLeft(), que);
+		}
+
+		if (node.hasRight())
+		{
+			printPostOrder(node.getRight(), que);
+		}
+
+		que.push(node.getData());
+	}
+	
+	//Print InOrder
+	public void printInOrder()
+	{
+		TreeNode<Type> node = root;
+		Queue<Type> que = new Queue<Type>();
+		
+		if (node.hasLeft())
+		{
+			printInOrder(node.getLeft(), que);
+		}
+		
+		que.push(node.getData());
+		
+		if (node.hasRight())
+		{
+			printInOrder(node.getRight(), que);
+		}
+		
+		que.printQueueOneLine();
+	}
+	
+	private void printInOrder(TreeNode<Type> node, Queue<Type> que)
+	{
+		if (node.hasLeft())
+		{
+			printInOrder(node.getLeft(), que);
+		}
+		
+		que.push(node.getData());
+		
+		if (node.hasRight())
+		{
+			printInOrder(node.getRight(), que);
+		}
+		
+		return;
+	}
+
 
 }

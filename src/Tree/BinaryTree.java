@@ -8,8 +8,6 @@
 
 package Tree;
 
-import QueueForTrees.Queue;
-
 public class BinaryTree<T extends Comparable<T>>
 {
 	BTreeNode<T> root, lowestIndex;

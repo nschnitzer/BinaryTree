@@ -1,4 +1,4 @@
-package QueueForTrees;
+package Tree;
 //*************************************
 // Nathan Schnitzer
 // Node.java
@@ -6,28 +6,28 @@ package QueueForTrees;
 // PLEASE NOTE: THIS IS ONLY TO BE USED FOR TREES!! THIS IS NOT THE NODE CLASS TO BE GRADED
 //*************************************
 
-public class Node2<Type> 
+public class Node2<T> 
 {
-	private Node2<Type> next;
-	private Type value;
+	private Node2<T> next;
+	private T value;
 	
-	public Node2(Node2<Type> nextNode, Type val)
+	public Node2(Node2<T> nextNode, T val)
 	{
 		next = nextNode;
 		value = val;
 	}
 	
-	public Node2<Type> getNextNode()
+	public Node2<T> getNextNode()
 	{
 		return next;
 	}
 	
-	public void setNextNode(Node2<Type> newNode)
+	public void setNextNode(Node2<T> newNode)
 	{
 		next = newNode;
 	}
 	
-	public Type getValue()
+	public T getValue()
 	{
 		return value;
 	}

@@ -5,12 +5,12 @@
 // PLEASE NOTE: THIS QUEUE CLASS IS CUSTOMIZED FOR TREES!!! THIS IS NOT THE QUEUE CLASS TO BE GRADED (seperate project files)
 //**************************************************************************
 
-package QueueForTrees;
+package Tree;
 
-public class Queue<Type> 
+public class Queue<T> 
 {
-	Node2<Type> first = null;
-	Node2<Type> lastAdded = null;
+	Node2<T> first = null;
+	Node2<T> lastAdded = null;
 	private int size;
 	
 	public Queue()
@@ -18,37 +18,37 @@ public class Queue<Type>
 		size = 0;
 	}
 	
-	public void push(Type obj)
+	public void push(T obj)
 	{
 		if (size == 0)
 		{
-			first = new Node2<Type>(null, obj);
+			first = new Node2<T>(null, obj);
 			lastAdded = first;
 			size++;
 			return;
 		}
 		
-		lastAdded.setNextNode(new Node2<Type>(null, obj));
+		lastAdded.setNextNode(new Node2<T>(null, obj));
 		lastAdded = lastAdded.getNextNode();
 		size++;
 	}
 	
-	public Type pop()
+	public T pop()
 	{
-		Type type = first.getValue();
+		T type = first.getValue();
 		first = first.getNextNode();
 		size--;
 		return type;
 	}
 	
-	public Type peek()
+	public T peek()
 	{
 		return first.getValue();
 	}
 	
 	public void printQueue()
 	{
-		Node2<Type> node = first;
+		Node2<T> node = first;
 		while (node.getNextNode() != null)
 		{
 			System.out.println(node.getValue());
@@ -60,7 +60,7 @@ public class Queue<Type>
 	//Prints the Queue in one line
 	public void printQueueOneLine()
 	{
-		Node2<Type> node = first;
+		Node2<T> node = first;
 		if (node == null)
 			return;
 		while (node.getNextNode() != null)
@@ -74,7 +74,7 @@ public class Queue<Type>
 	public int getLength()
 	{
 		int counter = 1;
-		Node2<Type> node = first;
+		Node2<T> node = first;
 		while (node.getNextNode() != null)
 		{
 			counter++;
